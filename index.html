@@ -1,0 +1,95 @@
+// Full Home Page with Product Buy Option and Notification System
+import React, { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+
+// Owner just needs to paste their products here
+const products = [
+  {
+    id: 1,
+    name: "Blue Hoodie",
+    description: "Warm and comfortable cotton hoodie",
+    price: 1500,
+    image: "/blue-hoodie.jpg", // Paste image in public folder
+  },
+  {
+    id: 2,
+    name: "Leather Wallet",
+    description: "Premium genuine leather wallet",
+    price: 999,
+    image: "/wallet.jpg",
+  },
+  {
+    id: 3,
+    name: "Wireless Earbuds",
+    description: "Noise-cancelling earbuds with long battery life",
+    price: 2499,
+    image: "/earbuds.jpg",
+  },
+];
+
+export default function HomePage() {
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [location, setLocation] = useState("");
+  const [phone, setPhone] = useState("");
+
+  const handleOrder = () => {
+    if (!selectedProduct || !location || !phone) {
+      alert("Please fill all details");
+      return;
+    }
+
+    const order = {
+      product: selectedProduct,
+      location,
+      phone,
+    };
+
+    console.log("NEW ORDER NOTIFICATION:", order);
+    alert("Order placed! The shop owner will contact you soon.");
+    setSelectedProduct(null);
+    setLocation("");
+    setPhone("");
+  };
+
+  return (
+    <div className="p-6 max-w-6xl mx-auto">
+      <h1 className="text-4xl font-bold mb-6">Welcome to Our Shop</h1>
+      <p className="mb-4 text-gray-600">Browse and order directly. Cash on delivery available.</p>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {products.map((product) => (
+          <Card key={product.id}>
+            <CardContent className="p-4">
+              <img src={product.image} alt={product.name} className="w-full h-48 object-cover rounded" />
+              <h3 className="text-xl font-semibold mt-3">{product.name}</h3>
+              <p className="text-gray-600 mb-2">{product.description}</p>
+              <p className="text-lg font-bold">PKR {product.price}</p>
+              <Button className="mt-3" onClick={() => setSelectedProduct(product)}>Buy Now</Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {selectedProduct && (
+        <div className="mt-10 border-t pt-6">
+          <h2 className="text-2xl font-bold mb-4">Order: {selectedProduct.name}</h2>
+          <Input
+            placeholder="Your Location / Delivery Address"
+            className="mb-3"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+          />
+          <Input
+            placeholder="Your Phone Number"
+            className="mb-3"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+          <Button onClick={handleOrder}>Place Order</Button>
+        </div>
+      )}
+    </div>
+  );
+}
